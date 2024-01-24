@@ -574,7 +574,8 @@ class PredicatedTileAccessIterator<Shape_, Element_, layout::PitchLinear,
       Index coord_strided = coord_offset_.strided() + the_predicates.iteration_strided_ * ThreadMap::Delta::kStrided;
       if (Gather) {
         coord_strided = indices_[coord_strided];
-      }
+        // coord_strided = 0;
+                      }
 
       LongIndex offset = Permute ? permute_layout_(TensorCoord(coord_contig, coord_strided)) : (coord_strided * LongIndex(params_.stride_) + coord_contig);
       return reinterpret_cast<AccessType *>(pointer_ + OffsetBytes<Element>(offset));

@@ -834,6 +834,34 @@ struct reciprocal_approximate<Array<T, N>> {
 };
 
 template <typename T, int N>
+struct atomic_add<Array<T, N>> {
+
+  CUTLASS_HOST_DEVICE
+  void operator()(Array<T, N> &lhs, Array<T, N> const &rhs) const {
+
+    atomic_add<T> scalar_op;
+
+    CUTLASS_PRAGMA_UNROLL
+    for (int i = 0; i < N; ++i) {
+      // if (threadIdx.x == 0) {
+      // printf("lhs[%d] = %f, rhs[%d] = %f\n", i, lhs[i], i, rhs[i]);
+      // printf("lhs[%d] = %p, rhs[%d] = %p\n", i, &lhs[i], i, &rhs[i]);
+      // }
+
+      // scalar_op(const_cast<T *>(&lhs[i]), *const_cast<T *>(&rhs[i]));
+      // lhs[i] = rhs[i];
+      // if (i >= N / 5)
+      //   lhs[i] += rhs[i];
+      // else
+        // atomicAdd(&lhs[i], rhs[i]);
+      lhs[i] += rhs[i];
+      // lhs[i] = rhs[i];
+      // atomicAdd(&lhs[i], rhs[i]);
+    }
+  }
+};
+
+template <typename T, int N>
 struct maximum<Array<T, N>, false> {
 
   CUTLASS_HOST_DEVICE
@@ -2581,6 +2609,13 @@ CUTLASS_HOST_DEVICE
 Array<T, N> fma(Array<T, N> const &a, Array<T, N> const &b, T c) {
   multiply_add<Array<T, N>> op;
   return op(a, b, c);
+}
+
+template <typename T, int N>
+CUTLASS_HOST_DEVICE
+void atomic_add_array(Array<T, N> &a, Array<T, N> const &b) {
+  atomic_add<Array<T, N>> op;
+  op(a, b);
 }
 
 

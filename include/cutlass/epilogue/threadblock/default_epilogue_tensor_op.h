@@ -506,7 +506,8 @@ struct DefaultEpilogueTensorOp {
     kElementsPerAccess
   >::Type;
 
-  static bool const UseCUDAStore = platform::is_same<ElementOutput, double>::value;
+  // static bool const UseCUDAStore = platform::is_same<ElementOutput, double>::value;
+  static bool const UseCUDAStore = true;
 
   using OutputTileIterator = cutlass::epilogue::threadblock::PredicatedTileIterator<
     OutputTileThreadMap,

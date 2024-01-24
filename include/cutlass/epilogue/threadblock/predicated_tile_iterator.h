@@ -417,8 +417,10 @@ public:
 
             if (UseCUDAStore) {
               if (guard) {
-                memory_pointer[0] =
-                    frag_ptr[frag_row_idx * ThreadMap::Iterations::kColumn + column];
+                // memory_pointer[0] =
+                //     frag_ptr[frag_row_idx * ThreadMap::Iterations::kColumn + column];
+                atomic_add_array(*reinterpret_cast<AccessType *>(&memory_pointer[0]),
+                 frag_ptr[frag_row_idx * ThreadMap::Iterations::kColumn + column]);
               }
             } else {
               cutlass::arch::global_store<AccessType, sizeof(AccessType)>(

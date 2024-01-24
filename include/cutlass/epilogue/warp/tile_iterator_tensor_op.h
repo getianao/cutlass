@@ -197,6 +197,7 @@ public:
     CUTLASS_PRAGMA_UNROLL
     for (int n = 0; n < Policy::OperatorCount::kColumn; ++n) {
       pointer_[n * Detail::kLanesInQuad + pointer_offset / Policy::kElementsPerAccess] = frag_ptr[n];
+      // atomic_add_array(pointer_[n * Detail::kLanesInQuad + pointer_offset / Policy::kElementsPerAccess], frag_ptr[n]);
     }
   }
 
